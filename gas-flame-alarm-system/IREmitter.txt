@@ -1,0 +1,21 @@
+#include <IRremoteESP8266.h>
+#include <IRsend.h>
+
+IRsend irsend(5);  // Set the GPIO to be used to sending the message.
+
+void setup(void){
+  Serial.begin(115200);
+  irsend.begin(); // Start IR sender
+}
+
+void loop(void){
+  // Envía la señal para el color rojo
+  irsend.sendNEC(0xFF22DD, 32);  // Envía el código hex para el color rojo
+
+  delay(2000);  // Espera 2 segundos antes de enviar la señal para el color blanco
+
+  // Envía la señal para el color blanco
+  irsend.sendNEC(0xFF52AD, 32);  // Envía el código hex para el color blanco
+
+  delay(2000);  // Espera 2 segundos antes de volver a enviar la señal para el color rojo
+}
