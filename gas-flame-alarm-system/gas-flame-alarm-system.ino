@@ -192,7 +192,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
+  client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
   
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
@@ -207,7 +207,7 @@ void setup() {
   bot.sendMessage(CHAT_ID, "Bot started up", "");
 
   // Ubidots connection
-  ubidots.setDebug(true);  // Uncomment this to make debug messages available
+  ubidots.setDebug(true);  // Uncomment this to make debug messages 
   ubidots.connectToWifi(WIFI_SSID, WIFI_PASS);
   ubidots.setCallback(callback);
   ubidots.setup();
@@ -216,7 +216,7 @@ void setup() {
   ubidots.publish(DEVICE_LABEL);
   for (uint8_t i = 0; i < NUMBER_OF_VARIABLES; i++)
   {
-      ubidots.subscribeLastValue(DEVICE_LABEL, variable_labels[i]); // Insert the device and Variable's Labels
+      ubidots.subscribeLastValue(DEVICE_LABEL, variable_labels[i]);
       delay(100);
   }
 }
@@ -280,24 +280,19 @@ void loop() {
 
     // Check if it's time to start the inactivity timer
     if (INACTIVITY_TIME !=0 && abs(static_cast<long>(millis() - CURRENT_INACTIVITY_TIME)) > INACTIVITY_TIME) {
-      // If the inactivity timer has been started and the specified time has passed
       alarmsActive = 1;
       INACTIVITY_TIME = 0;
       Serial.println("Activating alarms");
     } 
-
-    if (alarmsActive == 1 && (gasMeasure > gasThreshold || flameState == 1))
-    {
+    if (alarmsActive == 1 && (gasMeasure > gasThreshold || flameState == 1)){
       turnOnAlarms();
     }
     else if (manualAlarm == 1) {
       turnOnAlarms();
     }
-    else 
-    {
+    else {
       turnOffAlarms();
     }
-
     timer = millis(); 
   }
 
