@@ -16,22 +16,22 @@
 #define ALARM_LED 19
 #define DHTTYPE DHT11
 
-/*Telegram credentials*/
+/* Telegram credentials */
 #define BOTtoken ":"  // your Bot Token (Get from Botfather)
 #define CHAT_ID ""
 
-/*Definimos primero el Token que nos brinda la plataforma Ubidots para hacer la conexión*/
+/* Define the Token provided by the Ubidots platform to make the connection */
 const char *UBIDOTS_TOKEN = "";
-/*Definimos SSID y PASSWORD de nuestra red WiFi*/
-const char *WIFI_SSID = "";      
-const char *WIFI_PASS = "";   
-/*Definimos el nombre de nuestro dispositivo, el cual aparecerá en la plataforma Ubidots*/
+/* Define SSID and PASSWORD of your WiFi network */
+const char *WIFI_SSID = "";
+const char *WIFI_PASS = "";
+/* Define the name of your device, which will appear on the Ubidots platform */
 const char *DEVICE_LABEL = "";
 
-/*Definimos las variables que se medirán y que serán publicadas en la plataforma Ubidots*/
-const char *DO_MQ2 = "gas-state"; 
-const char *AO_MQ2 = "gas-measure"; 
-const char *DO_FLAME = "flame-state"; 
+/* Define the variables to be measured and published on the Ubidots platform */
+const char *DO_MQ2 = "gas-state";
+const char *AO_MQ2 = "gas-measure";
+const char *DO_FLAME = "flame-state";
 const char *TEMP_LABEL = "temperature";
 const char *HUMIDITY_LABEL = "humidity";
 const char *ALARMS_INACTIVITY_TIME = "alarms-inactivity-time";
@@ -134,17 +134,17 @@ void execute_cases()
         // Serial.println("Tiempo de inactividad recibido:" + String(value));
         INACTIVITY_TIME = value * 60 * 1000;
         CURRENT_INACTIVITY_TIME = millis();
-        Serial.println("Tiempo de inactividad comenzado:" + String(CURRENT_INACTIVITY_TIME));
+        Serial.println("Inactivity time started:" + String(CURRENT_INACTIVITY_TIME));
         alarmsActive = 0;
         break;
     case 1:
         // Serial.println("value:" + String(value));
         TOGGLE_ALARMS_VAR = value;
-        if (TOGGLE_ALARMS_VAR == 1.0) // El usuario activa las alarmas
+        if (TOGGLE_ALARMS_VAR == 1.0) // User activates alarms
         {
           alarmsActive = 1;
         }
-        else // El usuario activa las alarmas
+        else // User deactivates alarms
         {
           alarmsActive = 0;
         }
@@ -152,11 +152,11 @@ void execute_cases()
     case 2:
         // Serial.println("value:" + String(value));
         TEST_ALARMS_VAR = value;
-        if (TEST_ALARMS_VAR == 1.0) // El usuario activa las alarmas
+        if (TEST_ALARMS_VAR == 1.0) // User activates alarms
         {
           manualAlarm = 1;
         }
-        else // El usuario activa las alarmas
+        else // User deactivates alarms
         {
           manualAlarm = 0;
         }
@@ -177,8 +177,8 @@ Main Functions
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Medición iniciada");
-  Serial.println("DHT11 y MQ-2 Encendidos");
+  Serial.println("Measurement initiated");
+  Serial.println("DHT11 and MQ-2 Turned On");
   irsend.begin();
   dht.begin();
   pinMode(DO_FLAME_PIN, INPUT);
@@ -207,7 +207,7 @@ void setup() {
   bot.sendMessage(CHAT_ID, "Bot started up", "");
 
   // Ubidots connection
-  ubidots.setDebug(true);  //Descomentar esto para que los mensajes de depuración estén disponibles
+  ubidots.setDebug(true);  // Uncomment this to make debug messages available
   ubidots.connectToWifi(WIFI_SSID, WIFI_PASS);
   ubidots.setCallback(callback);
   ubidots.setup();
@@ -222,7 +222,7 @@ void setup() {
 }
 
 void loop() {
-  static unsigned long timer = millis();  // Declarar 'timer' como estática
+  static unsigned long timer = millis();  // Declare 'timer' as static
   if (!ubidots.connected())
   {
       ubidots.reconnect();
@@ -270,24 +270,21 @@ void loop() {
 
     ubidots.publish(DEVICE_LABEL);
 
-    Serial.println("Enviando los datos a Ubidots: ");
-    Serial.println("Temperatura: " + String(temperature) + " °C");
-    Serial.println("Humedad: " + String(humidity) + " %");
+    Serial.println("Sending data to Ubidots: ");
+    Serial.println("Temperature: " + String(temperature) + " °C");
+    Serial.println("Humidity: " + String(humidity) + " %");
     Serial.println("DO_FLAME_STATE: " + String(flameState));
     Serial.println("DO_MQ2_STATE: " + String(gasState));
     Serial.println("AO_MQ2_MEASURE: " + String(gasMeasure));
     Serial.println("-----------------------------------------");
 
-    // Verificar si es hora de iniciar el temporizador de inactividad
+    // Check if it's time to start the inactivity timer
     if (INACTIVITY_TIME !=0 && abs(static_cast<long>(millis() - CURRENT_INACTIVITY_TIME)) > INACTIVITY_TIME) {
-      // Si el temporizador de inactividad ha sido iniciado y ha pasado el tiempo especificado
+      // If the inactivity timer has been started and the specified time has passed
       alarmsActive = 1;
       INACTIVITY_TIME = 0;
-      Serial.println("Activando alarmas");
+      Serial.println("Activating alarms");
     } 
-    // else {
-    //   Serial.println("Inactividad: " + String(millis() - CURRENT_INACTIVITY_TIME));
-    // }
 
     if (alarmsActive == 1 && (gasMeasure > gasThreshold || flameState == 1))
     {
@@ -313,18 +310,18 @@ void turnOnAlarms() {
   if (colorLight != "red")
   {
     bot.sendMessage(CHAT_ID,"\xF0\x9F\x9A\xA8", "");
-    bot.sendMessage(CHAT_ID, "Atención! Se detectó una fuga de gas o fuego, por favor revisa tu lugar!!!", "");
+    bot.sendMessage(CHAT_ID, "Attention! Gas leak or fire detected, please check your place!!!", "");
     colorLight = "red";
-    irsend.sendNEC(0xFF6897, 32);  // Envía el código hex para el color rojo
+    irsend.sendNEC(0xFF6897, 32);  // Send the hex code for the color red
   }
-  digitalWrite(BUZZER_PIN, LOW);  // Encender el zumbador
-  digitalWrite(ALARM_LED, HIGH);  // Encender el led
+  digitalWrite(BUZZER_PIN, LOW);  // Turn on the buzzer
+  digitalWrite(ALARM_LED, HIGH);  // Turn on the LED
   delay(250);
-  digitalWrite(BUZZER_PIN, HIGH);  // Apagar el zumbador
-  digitalWrite(ALARM_LED, LOW);  // Apagar el led
+  digitalWrite(BUZZER_PIN, HIGH);  // Turn off the buzzer
+  digitalWrite(ALARM_LED, LOW);  // Turn off the LED
   delay(250);
-  digitalWrite(BUZZER_PIN, LOW);  // Encender el zumbador
-  digitalWrite(ALARM_LED, HIGH);  // Encender el led
+  digitalWrite(BUZZER_PIN, LOW);  // Turn on the buzzer
+  digitalWrite(ALARM_LED, HIGH);  // Turn on the LED
 }
 
 void turnOffAlarms() {
@@ -332,10 +329,10 @@ void turnOffAlarms() {
   if (colorLight != "white")
   {
     bot.sendMessage(CHAT_ID,"\xE2\x9C\x85", "");
-    bot.sendMessage(CHAT_ID, "Situación controlada, ya no se detecta fuga de gas o fuego. Ten más cuidado!", "");
+    bot.sendMessage(CHAT_ID, "Situation under control, no gas leak or fire detected. Be more careful!", "");
     colorLight = "white";
-    irsend.sendNEC(0xFF52AD, 32);  // Envía el código hex para el color blanco
+    irsend.sendNEC(0xFF52AD, 32);  // Send the hex code for the color white
   }
-  digitalWrite(BUZZER_PIN, HIGH);   // Apagar el zumbador
-  digitalWrite(ALARM_LED, LOW);  // Apagar el led
+  digitalWrite(BUZZER_PIN, HIGH);   // Turn off the buzzer
+  digitalWrite(ALARM_LED, LOW);  // Turn off the LED
 }
