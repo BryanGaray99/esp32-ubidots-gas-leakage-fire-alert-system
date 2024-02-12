@@ -23,15 +23,15 @@ This project aims to develop a comprehensive system for detecting and alerting g
 - Telegram Bot
 
 ## 3. Circuit Diagram, Architecture and Image of the system
-![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-temperature-control/blob/main/CircuitDiagram.png?raw=true)
+![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/CircuitDiagram.png?raw=true)
 
 Circuit Diagram
 
-![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-temperature-control/blob/main/Architecture.png?raw=true)
+![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/Architecture.png?raw=true)
 
 Architecture
 
-![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-temperature-control/blob/main/PhysicalCircuit.png?raw=true)
+![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/PhysicalCircuit.png?raw=true)
 
 Image of the system
 
@@ -128,7 +128,7 @@ The system operates in two main modes:
 This system provides a comprehensive solution for gas leak and fire detection, with flexible operation modes and integration with IoT platforms for monitoring and notifications.
 
 ## 7. Ubidots Dashboard
-![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-temperature-control/blob/main/UbidotsDashboard.png?raw=true)
+![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/UbidotsDashboard.png?raw=true)
 - Test button for alarms
 - Toggle switch for automatic alarms
 - Input for disabling alarms for a certain duration (max 60 min)
