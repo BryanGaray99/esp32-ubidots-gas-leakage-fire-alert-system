@@ -31,7 +31,7 @@ Circuit Diagram
 
 Architecture
 
-![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/PhysicalCircuit.png?raw=true)
+![Wiring Diagram](https://github.com/BryanGaray99/esp32-ubidots-gas-leakage-fire-alert-system/blob/main/PhysicalCircuit.jpg?raw=true)
 
 Image of the system
 
